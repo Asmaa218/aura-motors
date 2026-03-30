@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail | AURA MOTORS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#050505; --text:#ffffff; --gold:#D4AF37;
+            --gold-dim:rgba(212,175,55,0.12);
+            --glass-bg:rgba(255,255,255,0.05);
+            --glass-border:rgba(255,255,255,0.1);
+            --sans:'Montserrat',sans-serif;
+            --serif:'Playfair Display',serif;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;line-height:1.6}
+        a{text-decoration:none;color:inherit;transition:0.3s}
+        ul{list-style:none}
+ 
+        nav{position:fixed;top:0;width:100%;padding:20px 50px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:0.4s;backdrop-filter:blur(12px)}
+        nav.scrolled{background:rgba(5,5,5,0.94);padding:14px 50px;border-bottom:1px solid var(--glass-border)}
+        .logo{font-family:var(--serif);font-size:1.5rem;font-weight:700;letter-spacing:2px}
+        .logo span{color:var(--gold)}
+        .nav-links{display:flex;gap:40px}
+        .nav-links a{font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;opacity:0.7;position:relative}
+        .nav-links a::after{content:'';position:absolute;width:0;height:1px;bottom:-5px;left:0;background:var(--gold);transition:0.3s}
+        .nav-links a.active,.nav-links a:hover{opacity:1}
+        .nav-links a.active::after,.nav-links a:hover::after{width:100%}
+ 
+        .breadcrumb{padding:106px 50px 0;display:flex;align-items:center;gap:10px;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;color:#666}
+        .breadcrumb a:hover{color:var(--gold)}
+        .breadcrumb .sep{color:var(--gold)}
+        .breadcrumb .cur{color:#aaa}
+ 
+        .hero-split{display:grid;grid-template-columns:55% 45%;min-height:90vh;margin-top:20px}
+ 
+        .gallery-col{position:relative;overflow:hidden}
+        .main-img-wrap{width:100%;height:68vh;position:relative;overflow:hidden;cursor:zoom-in;background:#0a0a0a}
+        .main-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform 0.7s ease,opacity 0.2s ease}
+        .main-img-wrap:hover img{transform:scale(1.04)}
+        .img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 55%,rgba(5,5,5,0.7));pointer-events:none}
+        .img-counter{position:absolute;bottom:20px;right:20px;font-size:0.7rem;letter-spacing:1px;color:rgba(255,255,255,0.5);z-index:2}
+ 
+        .thumbs{display:flex;gap:8px;padding:10px 0 0}
+        .thumb{flex:1;height:90px;overflow:hidden;border:2px solid transparent;cursor:pointer;transition:0.3s;background:#0a0a0a}
+        .thumb img{width:100%;height:100%;object-fit:cover;transition:0.4s}
+        .thumb:hover img,.thumb.active img{transform:scale(1.08)}
+        .thumb.active{border-color:var(--gold)}
+ 
+        .info-col{padding:50px 60px 40px;display:flex;flex-direction:column;justify-content:center;position:relative}
+        .info-col::before{content:'';position:absolute;left:0;top:10%;bottom:10%;width:1px;background:linear-gradient(to bottom,transparent,var(--glass-border),transparent)}
+        .car-eyebrow{font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;opacity:0;animation:fadeUp 0.7s ease forwards 0.1s}
+        .car-name{font-family:var(--serif);font-size:2.8rem;font-weight:400;line-height:1.1;margin-bottom:6px;opacity:0;animation:fadeUp 0.7s ease forwards 0.25s}
+        .car-tagline{font-size:0.82rem;color:#666;letter-spacing:0.5px;margin-bottom:32px;opacity:0;animation:fadeUp 0.7s ease forwards 0.4s}
+        .price-row{display:flex;align-items:flex-end;gap:14px;margin-bottom:32px;opacity:0;animation:fadeUp 0.7s ease forwards 0.5s}
+        .price-main{font-size:2rem;font-weight:700;color:var(--gold);line-height:1}
+        .price-info{font-size:0.72rem;color:#555;letter-spacing:0.5px;padding-bottom:5px;line-height:1.5}
+ 
+        .quick-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--glass-border);border:1px solid var(--glass-border);margin-bottom:32px;opacity:0;animation:fadeUp 0.7s ease forwards 0.62s}
+        .qs{background:var(--bg);padding:18px 12px;text-align:center;transition:0.3s}
+        .qs:hover{background:var(--gold-dim)}
+        .qs-val{font-family:var(--serif);font-size:1.3rem;color:var(--gold);display:block;line-height:1}
+        .qs-lbl{font-size:0.63rem;text-transform:uppercase;letter-spacing:1.5px;color:#888;margin-top:5px}
+ 
+        .avail-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--glass-bg);border:1px solid var(--glass-border);margin-bottom:28px;font-size:0.78rem;color:#aaa;opacity:0;animation:fadeUp 0.7s ease forwards 0.72s}
+        .avail-dot{width:8px;height:8px;border-radius:50%;background:#2ecc71;flex-shrink:0;box-shadow:0 0 8px rgba(46,204,113,0.6);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+ 
+        .cta-group{display:flex;gap:12px;margin-bottom:28px;opacity:0;animation:fadeUp 0.7s ease forwards 0.82s}
+        .btn-primary{flex:1;padding:16px 10px;background:var(--gold);border:none;color:#000;text-transform:uppercase;letter-spacing:2px;font-size:0.75rem;font-weight:700;font-family:var(--sans);cursor:pointer;transition:0.3s}
+        .btn-primary:hover{background:#fff}
+        .btn-outline{flex:1;padding:16px 10px;background:transparent;border:1px solid var(--glass-border);color:#fff;text-transform:uppercase;letter-spacing:2px;font-size:0.75rem;cursor:pointer;transition:0.3s;font-family:var(--sans)}
+        .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+        .info-footer{font-size:0.7rem;color:#444;letter-spacing:0.5px;opacity:0;animation:fadeUp 0.7s ease forwards 0.95s}
+ 
+        .tabs-section{max-width:1400px;margin:80px auto 0;padding:0 50px}
+        .tab-nav{display:flex;border-bottom:1px solid var(--glass-border);margin-bottom:60px}
+        .tab-btn{padding:15px 36px;background:none;border:none;color:#555;font-family:var(--sans);font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;cursor:pointer;position:relative;transition:0.3s}
+        .tab-btn::after{content:'';position:absolute;bottom:-1px;left:0;width:0;height:2px;background:var(--gold);transition:0.3s}
+        .tab-btn.active{color:#fff}
+        .tab-btn.active::after{width:100%}
+        .tab-btn:hover{color:#ccc}
+        .tab-panel{display:none;padding-bottom:80px}
+        .tab-panel.active{display:block}
+ 
+        .specs-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px 80px}
+        .spec-group h4{font-size:0.68rem;text-transform:uppercase;letter-spacing:3px;color:var(--gold);margin-bottom:22px;padding-bottom:12px;border-bottom:1px solid var(--glass-border)}
+        .spec-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:0.84rem}
+        .spec-row:last-child{border:none}
+        .spec-k{color:#888}
+        .spec-v{font-weight:600}
+ 
+        .desc-layout{display:grid;grid-template-columns:3fr 2fr;gap:70px}
+        .desc-text h3{font-family:var(--serif);font-size:2rem;font-weight:400;margin-bottom:22px;line-height:1.3}
+        .desc-text p{color:#aaa;font-size:0.88rem;line-height:1.9;margin-bottom:18px}
+        .highlights{display:flex;flex-direction:column;gap:16px}
+        .hl-item{padding:22px;background:var(--glass-bg);border:1px solid var(--glass-border);border-left:3px solid var(--gold);transition:0.3s}
+        .hl-item:hover{background:var(--gold-dim)}
+        .hl-item h5{font-size:0.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);margin-bottom:8px}
+        .hl-item p{font-size:0.82rem;color:#aaa}
+ 
+        .sticky{position:fixed;bottom:0;left:0;right:0;background:rgba(5,5,5,0.97);border-top:1px solid var(--glass-border);padding:14px 50px;display:flex;align-items:center;justify-content:space-between;z-index:900;backdrop-filter:blur(20px);transform:translateY(100%);transition:0.4s ease}
+        .sticky.show{transform:translateY(0)}
+        .sticky-left{display:flex;align-items:center;gap:24px}
+        .sticky-name{font-family:var(--serif);font-size:1.05rem}
+        .sticky-price{color:var(--gold);font-weight:700;font-size:1.1rem}
+        .sticky-actions{display:flex;gap:12px}
+        .sticky-actions button{padding:12px 28px;font-family:var(--sans);font-size:0.72rem;text-transform:uppercase;letter-spacing:1.5px;cursor:pointer;transition:0.3s}
+        .s-gold{background:var(--gold);border:none;color:#000;font-weight:700}
+        .s-gold:hover{background:#fff}
+        .s-glass{background:transparent;border:1px solid var(--glass-border);color:#fff}
+        .s-glass:hover{border-color:var(--gold);color:var(--gold)}
+ 
+        /* ── MODAL ── */
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:0.3s;backdrop-filter:blur(8px)}
+        .modal-overlay.open{opacity:1;pointer-events:all}
+        .modal{background:#0c0c0c;border:1px solid var(--glass-border);padding:54px;max-width:540px;width:92%;position:relative;transform:translateY(20px) scale(0.97);transition:0.35s}
+        .modal-overlay.open .modal{transform:translateY(0) scale(1)}
+        .modal-close{position:absolute;top:18px;right:22px;background:none;border:none;color:#666;font-size:1.6rem;cursor:pointer;line-height:1;transition:0.2s}
+        .modal-close:hover{color:#fff}
+        .modal h3{font-family:var(--serif);font-size:1.9rem;margin-bottom:6px}
+        .modal-sub{font-size:0.82rem;color:#888;margin-bottom:34px}
+        .modal-form{display:flex;flex-direction:column;gap:13px}
+        .modal-form input,.modal-form select,.modal-form textarea{background:var(--glass-bg);border:1px solid var(--glass-border);color:#fff;padding:13px 16px;font-family:var(--sans);font-size:0.84rem;outline:none;transition:0.3s;width:100%}
+        .modal-form input:focus,.modal-form select:focus,.modal-form textarea:focus{border-color:var(--gold);background:var(--gold-dim)}
+        .modal-form select option{background:#111}
+        .modal-form textarea{resize:none;height:95px}
+        .modal-form input::placeholder,.modal-form textarea::placeholder{color:#555}
+        .modal-submit{background:var(--gold);border:none;color:#000;padding:15px;text-transform:uppercase;letter-spacing:2px;font-weight:700;font-size:0.78rem;cursor:pointer;font-family:var(--sans);transition:0.3s}
+        .modal-submit:hover{background:#fff}
+ 
+        /* ── CONFIRMATION SUCCESS ── */
+        .success-block{display:none;flex-direction:column;align-items:center;text-align:center;padding:20px 0 10px}
+        .success-block.visible{display:flex}
+        .success-icon{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin-bottom:22px;animation:scaleIn 0.4s ease forwards}
+        @keyframes scaleIn{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+        .success-icon svg{width:28px;height:28px}
+        .success-title{font-family:var(--serif);font-size:1.5rem;color:var(--gold);margin-bottom:10px;line-height:1.3}
+        .success-msg{font-size:0.84rem;color:#888;line-height:1.8;max-width:380px}
+        .success-details{margin-top:24px;width:100%;border-top:1px solid var(--glass-border);padding-top:20px;display:flex;flex-direction:column;gap:10px}
+        .success-row{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem}
+        .success-row span:first-child{color:#555;text-transform:uppercase;letter-spacing:1px}
+        .success-row span:last-child{color:#ccc;font-weight:600}
+        .success-badge{display:inline-block;padding:4px 12px;border:1px solid var(--gold);color:var(--gold);font-size:0.68rem;text-transform:uppercase;letter-spacing:2px}
+        .success-close-btn{margin-top:28px;padding:13px 32px;background:transparent;border:1px solid var(--glass-border);color:#aaa;font-family:var(--sans);font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;cursor:pointer;transition:0.3s}
+        .success-close-btn:hover{border-color:var(--gold);color:var(--gold)}
+ 
+        /* ── LIGHTBOX ── */
+        .lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:3000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:0.3s}
+        .lightbox.open{opacity:1;pointer-events:all}
+        .lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;transform:scale(0.95);transition:0.3s}
+        .lightbox.open img{transform:scale(1)}
+        .lb-close{position:absolute;top:24px;right:30px;font-size:2rem;color:#fff;cursor:pointer;background:none;border:none;transition:0.2s}
+        .lb-close:hover{color:var(--gold)}
+ 
+        footer{border-top:1px solid var(--glass-border);padding:46px 50px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+        .footer-logo{font-family:var(--serif);font-size:1.2rem;letter-spacing:2px}
+        .footer-logo span{color:var(--gold)}
+        footer p{font-size:0.76rem;color:#666}
+        .footer-links{display:flex;gap:28px}
+        .footer-links a{font-size:0.73rem;color:#888;text-transform:uppercase;letter-spacing:1px}
+        .footer-links a:hover{color:var(--gold)}
+ 
+        @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+ 
+        @media(max-width:1100px){
+            .hero-split{grid-template-columns:1fr}
+            .main-img-wrap{height:55vw}
+            .info-col{padding:40px}
+            .info-col::before{display:none}
+            .specs-grid{grid-template-columns:1fr;gap:40px}
+            .desc-layout{grid-template-columns:1fr;gap:40px}
+        }
+        @media(max-width:768px){
+            nav{padding:15px 20px}
+            .nav-links{display:none}
+            .breadcrumb{padding:84px 20px 0;font-size:0.65rem}
+            .info-col{padding:30px 20px}
+            .car-name{font-size:2rem}
+            .tabs-section{padding:0 20px}
+            .tab-btn{padding:13px 14px;font-size:0.7rem}
+            .sticky{padding:12px 18px}
+            .sticky-name{display:none}
+            footer{padding:36px 20px;flex-direction:column;text-align:center}
+        }
+    </style>
+</head>
+<body>
+ 
+<nav id="navbar">
+    <div class="logo">AURA <span>MOTORS</span></div>
+    <ul class="nav-links">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="collection.html" class="active">Collection</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="apropos.html">À Propos</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</nav>
+ 
+<div class="breadcrumb">
+    <a href="index.html">Accueil</a>
+    <span class="sep">›</span>
+    <a href="collection.html">Collection</a>
+    <span class="sep">›</span>
+    <span class="cur" id="bcName">—</span>
+</div>
+ 
+<section class="hero-split">
+    <div class="gallery-col">
+        <div class="main-img-wrap" id="mainImgWrap" onclick="openLightbox()">
+            <img id="mainImg" src="" alt="">
+            <div class="img-overlay"></div>
+            <span class="img-counter" id="imgCounter"></span>
+        </div>
+        <div class="thumbs" id="thumbsRow"></div>
+    </div>
+    <div class="info-col">
+        <p class="car-eyebrow" id="carEyebrow">—</p>
+        <h1 class="car-name" id="carName">—</h1>
+        <p class="car-tagline" id="carTagline">—</p>
+        <div class="price-row">
+            <span class="price-main" id="carPrice">—</span>
+            <span class="price-info">Toutes taxes incluses<br>Livraison disponible</span>
+        </div>
+        <div class="quick-specs">
+            <div class="qs"><span class="qs-val" id="qsPower">—</span><span class="qs-lbl">Puissance</span></div>
+            <div class="qs"><span class="qs-val" id="qsYear">—</span><span class="qs-lbl">Année</span></div>
+            <div class="qs"><span class="qs-val" id="qsMarque">—</span><span class="qs-lbl">Marque</span></div>
+        </div>
+        <div class="avail-bar">
+            <div class="avail-dot"></div>
+            <span>Disponible immédiatement · Inspection certifiée incluse</span>
+        </div>
+        <div class="cta-group">
+            <button class="btn-primary" onclick="openModal('reservation')">Réserver</button>
+            <button class="btn-outline" onclick="openModal('essai')">Essai Privé</button>
+        </div>
+        <p class="info-footer">Garantie incluse · Financement disponible · Livraison au Maroc</p>
+    </div>
+</section>
+ 
+<section class="tabs-section">
+    <div class="tab-nav">
+        <button class="tab-btn active" data-tab="specs">Caractéristiques</button>
+        <button class="tab-btn" data-tab="desc">Description</button>
+    </div>
+    <div class="tab-panel active" id="tab-specs"><div class="specs-grid" id="specsGrid"></div></div>
+    <div class="tab-panel" id="tab-desc">
+        <div class="desc-layout">
+            <div class="desc-text" id="descText"></div>
+            <div class="highlights" id="descHighlights"></div>
+        </div>
+    </div>
+</section>
+ 
+<footer>
+    <div class="footer-logo">AURA <span>MOTORS</span></div>
+    <p>&copy; 2026 AURA MOTORS. Tous droits réservés.</p>
+    <div class="footer-links">
+        <a href="index.html">Accueil</a>
+        <a href="collection.html">Collection</a>
+        <a href="contact.html">Contact</a>
+    </div>
+</footer>
+ 
+<div class="sticky" id="stickyBar">
+    <div class="sticky-left">
+        <span class="sticky-name" id="stickyName">—</span>
+        <span class="sticky-price" id="stickyPrice">—</span>
+    </div>
+    <div class="sticky-actions">
+        <button class="s-glass" onclick="openModal('essai')">Essai</button>
+        <button class="s-gold" onclick="openModal('reservation')">Réserver</button>
+    </div>
+</div>
+ 
+<!-- ════════════════════════════════════════
+     MODAL — Formulaire + Confirmation
+════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOutside(event)">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">×</button>
+ 
+        <!-- En-tête de la modale -->
+        <h3 id="modalTitle">Réserver</h3>
+        <p class="modal-sub" id="modalSub">Un conseiller vous contactera sous 24h.</p>
+ 
+        <!-- Formulaire -->
+        <div class="modal-form" id="modalFormWrap">
+            <input type="text" id="fieldNom" placeholder="Prénom et Nom *">
+            <input type="email" id="fieldEmail" placeholder="Email *">
+            <input type="tel" id="fieldTel" placeholder="Téléphone">
+            <select id="fieldDelai">
+                <option value="" disabled selected>Délai souhaité</option>
+                <option>Immédiatement</option>
+                <option>Dans les 30 jours</option>
+                <option>Dans les 3 mois</option>
+                <option>À définir</option>
+            </select>
+            <textarea id="fieldMsg" placeholder="Message ou questions..."></textarea>
+            <button class="modal-submit" id="modalSubmitBtn" onclick="submitForm()">Envoyer →</button>
+        </div>
+ 
+        <!-- Bloc de confirmation (affiché après soumission) -->
+        <div class="success-block" id="successBlock">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <p class="success-title" id="successTitle">—</p>
+            <p class="success-msg" id="successMsg">—</p>
+            <div class="success-details">
+                <div class="success-row">
+                    <span>Véhicule</span>
+                    <span id="successCar">—</span>
+                </div>
+                <div class="success-row">
+                    <span>Client</span>
+                    <span id="successName">—</span>
+                </div>
+                <div class="success-row">
+                    <span>Statut</span>
+                    <span class="success-badge" id="successBadge">—</span>
+                </div>
+                <div class="success-row">
+                    <span>Délai de réponse</span>
+                    <span>Sous 24h</span>
+                </div>
+            </div>
+            <button class="success-close-btn" onclick="closeModal()">Fermer</button>
+        </div>
+    </div>
+</div>
+ 
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lb-close" onclick="closeLightbox()">×</button>
+    <img id="lbImg" src="" alt="">
+</div>
+ 
+<script>
+/* ════════════════════════════════════════════════════════════
+   BASE DE DONNÉES
+════════════════════════════════════════════════════════════ */
+const carsData = [
+    {
+        id:1, name:"Mercedes-Benz E-Class", price:"35 000 DH/Mois",
+        year:"2024", power:"381 ch", marque:"Mercedes-Benz", category:"classique",
+        tagline:"Élégance allemande redéfinie — confort, technologie et prestige au quotidien",
+        img:"imag37.jpeg",
+        gallery:["imag39.jpeg","imag36.jpeg","imag35.jpeg","imag37.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","Mercedes-Benz"],["Modèle","E-Class"],["Année","2024"],["Puissance","381 ch"],["Transmission","Automatique 9G-Tronic"],["Carburant","Hybride rechargeable"]]},
+            {group:"Informations location",rows:[["Tarif","35 000 DH / Mois"],["Catégorie","Classique / Berline de luxe"],["Disponibilité","Immédiate"],["Garantie","Incluse"],["Assurance","Tous risques incluse"],["Kilométrage","Illimité"]]}
+        ],
+        description:{title:"L'art de conduire au quotidien",paras:["La Mercedes-Benz E-Class 2024 représente le summum de la berline executive allemande. Avec ses 381 chevaux en version hybride rechargeable, elle allie performance et sobriété dans un écrin de luxe absolu.","L'intérieur baigne dans les matériaux les plus raffinés : cuir nappa, boiseries authentiques et le nouveau système MBUX avec double écran incurvé de 12,3 pouces.","Disponible immédiatement chez AURA MOTORS avec assurance tous risques et assistance 24h/24 incluses."],highlights:[{title:"Hybride rechargeable",text:"381 ch combinés pour une conduite zéro émission en ville et performance sur route."},{title:"MBUX Generation II",text:"Double écran incurvé 12,3\", commandes vocales et intelligence artificielle embarquée."},{title:"Confort supérieur",text:"Suspension à amortissement actif, sièges massants et insonorisation de haut vol."}]}
+    },
+    {
+        id:2, name:"BMW Série 3 320D", price:"25 000 DH/Mois",
+        year:"2020", power:"190 ch", marque:"BMW", category:"classique",
+        tagline:"Le plaisir de conduire incarné — sportivité, efficience, caractère BMW",
+        img:"imag38.jpeg",
+        gallery:["imag38.jpeg","imag42.jpeg","imag40.jpeg","imag41.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","BMW"],["Modèle","Série 3 320D"],["Année","2020"],["Puissance","190 ch"],["Couple","400 Nm"],["Transmission","Boîte auto 8 rapports"],["Carburant","Diesel"]]},
+            {group:"Informations location",rows:[["Tarif","25 000 DH / Mois"],["Catégorie","Classique / Berline sportive"],["Disponibilité","Immédiate"],["Garantie","Incluse"],["Assurance","Tous risques incluse"],["Kilométrage","Illimité"]]}
+        ],
+        description:{title:"Freude am Fahren — le plaisir à l'état pur",paras:["La BMW Série 3 320D est la référence absolue de la berline compacte sportive. Son moteur diesel de 190 ch délivre un couple de 400 Nm dès les bas régimes.","Le châssis à roues arrière directrices et la direction précise font de chaque virage un plaisir — le conducteur au centre de l'expérience.","Son rapport performance/consommation exceptionnel en fait le choix idéal pour les professionnels exigeants."],highlights:[{title:"Propulsion arrière",text:"Architecture propulsion BMW pour un équilibre et une motricité exemplaires."},{title:"Live Cockpit Pro",text:"Instrumentation digitale 12,3\" et écran central tactile avec iDrive 7."},{title:"Diesel efficace",text:"190 ch, 400 Nm et moins de 5L/100 km en cycle mixte."}]}
+    },
+    {
+        id:3, name:"Porsche 922 Turbo S", price:"350 000 DH/Mois",
+        year:"2021", power:"650 ch", marque:"Porsche", category:"sport",
+        tagline:"L'icône sportive absolue — 650 chevaux de pur plaisir Porsche",
+        img:"imag45.jpeg",
+        gallery:["imag45.jpeg","imag43.jpeg","imag44.jpeg","imag47.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","Porsche"],["Modèle","922 Turbo S"],["Année","2021"],["Puissance","650 ch"],["Transmission","PDK 8 rapports"],["Traction","Intégrale Porsche"],["Carburant","Essence"]]},
+            {group:"Informations location",rows:[["Tarif","350 000 DH / Mois"],["Catégorie","Sport / Supercar"],["Disponibilité","Sur réservation"],["Garantie","Incluse"],["Assurance","Tous risques incluse"],["Kilométrage","Limité — nous contacter"]]}
+        ],
+        description:{title:"650 chevaux de légende Porsche",paras:["La Porsche 922 Turbo S représente le summum de l'ingénierie sportive allemande. Ses 650 chevaux propulsent cette machine avec une vélocité et une précision incomparables.","La boîte PDK à 8 rapports exécute les changements de rapport en quelques millièmes de seconde, tandis que la transmission intégrale répartit intelligemment la puissance.","Louer une Porsche 922 Turbo S chez AURA MOTORS, c'est vivre une expérience réservée à une clientèle d'exception."],highlights:[{title:"650 ch Biturbo",text:"Moteur flat-6 biturbo pour une puissance explosive et une sonorité unique."},{title:"PDK ultra-rapide",text:"Boîte double embrayage 8 rapports — changements en quelques millièmes de seconde."},{title:"AWD Porsche",text:"Transmission intégrale active pour une mise en traction parfaite sur tout revêtement."}]}
+    },
+    {
+        id:4, name:"Audi Q8 S Line", price:"60 000 DH/Mois",
+        year:"2023", power:"340 ch", marque:"Audi", category:"moderne",
+        tagline:"Le SUV coupé de prestige — design audacieux, technologie de pointe",
+        img:"imag1.jpeg",
+        gallery:["imag1.jpeg","imag4.jpeg","imag3.jpeg","imag2.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","Audi"],["Modèle","Q8 S Line"],["Année","2023"],["Puissance","340 ch"],["Couple","500 Nm"],["Transmission","Tiptronic 8 rapports"],["Traction","Quattro intégral"],["Carburant","Essence"]]},
+            {group:"Informations location",rows:[["Tarif","60 000 DH / Mois"],["Catégorie","SUV Coupé / Moderne"],["Disponibilité","Immédiate"],["Garantie","Incluse"],["Assurance","Tous risques incluse"],["Kilométrage","Illimité"]]}
+        ],
+        description:{title:"Le SUV coupé qui redéfinit le prestige",paras:["L'Audi Q8 S Line 2023 est le SUV coupé de référence : un design sculptural combiné aux dernières technologies Audi pour une expérience de conduite hors normes.","Un V6 TFSI de 340 ch associé à la transmission Quattro légendaire garantit une motricité exemplaire.","L'habitacle offre Virtual Cockpit 12,3\", MMI Navigation plus et sièges sport en cuir S Line."],highlights:[{title:"Design S Line",text:"Carrosserie S Line avec jantes 22\", diffuseur sportif et finitions aluminium mat."},{title:"Quattro légendaire",text:"Transmission intégrale à répartition active pour une adhérence en toute situation."},{title:"MMI Touch 10.1\"",text:"Système d'info-divertissement tactile avec navigation temps réel et Apple CarPlay."}]}
+    },
+    {
+        id:5, name:"Volkswagen Touareg R-Line V6", price:"38 000 DH/Mois",
+        year:"2023", power:"286 ch", marque:"Volkswagen", category:"moderne",
+        tagline:"Le SUV premium par excellence — espace, confort et technologie réunis",
+        img:"imag18.jpeg",
+        gallery:["imag18.jpeg","imag14.jpeg","imag12.jpeg","imag15.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","Volkswagen"],["Modèle","Touareg R-Line V6"],["Année","2023"],["Puissance","286 ch"],["Couple","450 Nm"],["Transmission","Automatique 8 rapports"],["Traction","4Motion intégral"],["Carburant","Essence"]]},
+            {group:"Informations location",rows:[["Tarif","38 000 DH / Mois"],["Catégorie","SUV Premium / Moderne"],["Disponibilité","Immédiate"],["Garantie","Incluse"],["Assurance","Tous risques incluse"],["Kilométrage","Illimité"]]}
+        ],
+        description:{title:"L'excellence VW dans un grand SUV",paras:["Le Volkswagen Touareg R-Line V6 2023 est le flagship de la gamme Volkswagen. 286 ch et transmission 4Motion intégrale pour une polyvalence exceptionnelle.","L'Innovision Cockpit avec écran 15 pouces et tableau de bord numérique 12,3 pouces créent une bulle technologique ultra-moderne.","En version R-Line : jantes spécifiques, calandre noire brillante et intérieur bi-ton pour un caractère dynamique affirmé."],highlights:[{title:"Innovision 15\"",text:"Le plus grand écran tactile du segment pour une expérience multimédia inégalée."},{title:"4Motion intégral",text:"Transmission intégrale permanente avec répartition variable selon les conditions."},{title:"Finition R-Line",text:"Jantes 21\", calandre noire, barres de toit alu et éclairage ambiant exclusifs."}]}
+    },
+    {
+        id:6, name:"Aston Martin Vanquish Zagato Volante", price:"25 000 DH/Jour",
+        year:"2018", power:"600 ch", marque:"Aston Martin", category:"gt",
+        tagline:"L'exclusivité absolue — l'une des 99 Vanquish Zagato Volante au monde",
+        img:"imag16.jpeg",
+        gallery:["imag16.jpeg","imag19.jpeg","imag21.jpeg","imag20.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","Aston Martin"],["Modèle","Vanquish Zagato Volante"],["Année","2018"],["Puissance","600 ch"],["Moteur","V12 5.9L atmosphérique"],["Transmission","Automatique 8 rapports"],["Production","99 exemplaires au monde"]]},
+            {group:"Informations location",rows:[["Tarif","25 000 DH / Jour"],["Catégorie","GT / Collector"],["Disponibilité","Sur réservation exclusive"],["Garantie","Incluse"],["Assurance","Tous risques premium"],["Kilométrage","Limité — nous contacter"]]}
+        ],
+        description:{title:"L'une des voitures les plus rares au monde",paras:["L'Aston Martin Vanquish Zagato Volante est une œuvre d'art mobile. Née de la collaboration entre Aston Martin et Zagato, elle est produite à seulement 99 exemplaires dans le monde.","Un V12 atmosphérique de 5.9 litres développe 600 chevaux d'une douceur et d'une musicalité incomparables.","Louer ce véhicule chez AURA MOTORS est une expérience unique, réservée à une clientèle ultra-sélective."],highlights:[{title:"99 exemplaires",text:"L'une des voitures les plus exclusives jamais produites — une rareté absolue."},{title:"V12 atmosphérique",text:"5.9L V12 à aspiration naturelle, 600 ch — pureté sonore et onctuosité sans égal."},{title:"Design Zagato",text:"Carrosserie redessinée par Zagato : double bosse de toit et nez en queue de canard."}]}
+    },
+    {
+        id:7, name:"Land Rover Range Rover Velar", price:"45 000 DH/Mois",
+        year:"2020", power:"550 ch", marque:"Range Rover", category:"moderne",
+        tagline:"L'élégance britannique sur tous les terrains — SUV coupé d'exception",
+        img:"imag23.jpeg",
+        gallery:["imag23.jpeg","imag24.jpeg","imag26.jpeg","imag17.jpeg"],
+        specs:[
+            {group:"Moteur & Performances",rows:[["Marque","Land Rover"],["Modèle","Range Rover Velar"],["Année","2020"],["Puissance","550 ch"],["Transmission","Automatique 8 rapports"],["Traction","AWD permanent"],["Carburant","Essence"]]},
+            {group:"Informations location",rows:[["Tarif","45 000 DH / Mois"],["Catégorie","SUV Coupé / Moderne"],["Disponibilité","Immédiate"],["Garantie","Incluse"],["Assurance","Tous risques incluse"],["Kilométrage","Illimité"]]}
+        ],
+        description:{title:"Le SUV coupé le plus élégant de sa catégorie",paras:["Le Range Rover Velar est la synthèse parfaite entre l'élégance britannique et les capacités tout-terrain légendaires de Land Rover.","550 chevaux et transmission intégrale permanente pour des performances impressionnantes en toutes circonstances.","Doubles écrans Touch Pro Duo de 10 pouces, sièges en cuir Windsor et finitions bois Noble huilé — un sanctuaire de raffinement."],highlights:[{title:"Design avant-gardiste",text:"Silhouette SUV coupé sculptée, poignées affleurantes et toit panoramique."},{title:"Touch Pro Duo",text:"Deux écrans tactiles empilés de 10\" pour contrôler toutes les fonctions."},{title:"AWD Terrain Response",text:"Système Terrain Response 2 avec modes auto pour s'adapter à tout type de surface."}]}
+    }
+];
+ 
+/* ── Récupérer l'ID depuis l'URL ── */
+const params = new URLSearchParams(window.location.search);
+const carId  = parseInt(params.get('id')) || 1;
+const car    = carsData.find(c => c.id === carId) || carsData[0];
+ 
+/* ── Remplir les champs ── */
+document.title = `${car.name} | AURA MOTORS`;
+document.getElementById('bcName').textContent      = car.name;
+document.getElementById('carEyebrow').textContent  = `${car.year} · ${car.category.charAt(0).toUpperCase()+car.category.slice(1)} · ${car.marque}`;
+document.getElementById('carName').textContent     = car.name;
+document.getElementById('carTagline').textContent  = car.tagline;
+document.getElementById('carPrice').textContent    = car.price;
+document.getElementById('qsPower').textContent     = car.power;
+document.getElementById('qsYear').textContent      = car.year;
+document.getElementById('qsMarque').textContent    = car.marque;
+document.getElementById('stickyName').textContent  = car.name;
+document.getElementById('stickyPrice').textContent = car.price;
+ 
+/* ── Galerie ── */
+const gallery = car.gallery || [];
+let currentImg = 0;
+ 
+function setMainImg(i) {
+    const img = document.getElementById('mainImg');
+    img.style.opacity = 0;
+    setTimeout(() => {
+        currentImg = i;
+        img.src = gallery[i];
+        document.getElementById('lbImg').src = gallery[i];
+        document.getElementById('imgCounter').textContent = gallery.length > 1 ? `${i+1} / ${gallery.length}` : '';
+        document.querySelectorAll('.thumb').forEach((t,j) => t.classList.toggle('active', j===i));
+        img.style.opacity = 1;
+    }, 180);
+}
+ 
+const thumbsRow = document.getElementById('thumbsRow');
+gallery.forEach((src, i) => {
+    const d = document.createElement('div');
+    d.className = 'thumb' + (i===0 ? ' active' : '');
+    d.innerHTML = `<img src="${src}" alt="">`;
+    d.onclick = () => setMainImg(i);
+    thumbsRow.appendChild(d);
+});
+if (gallery.length > 0) setMainImg(0);
+ 
+/* ── Specs ── */
+document.getElementById('specsGrid').innerHTML = car.specs.map(g=>`
+    <div class="spec-group">
+        <h4>${g.group}</h4>
+        ${g.rows.map(r=>`<div class="spec-row"><span class="spec-k">${r[0]}</span><span class="spec-v">${r[1]}</span></div>`).join('')}
+    </div>`).join('');
+ 
+/* ── Description ── */
+document.getElementById('descText').innerHTML =
+    `<h3>${car.description.title}</h3>${car.description.paras.map(p=>`<p>${p}</p>`).join('')}`;
+document.getElementById('descHighlights').innerHTML =
+    car.description.highlights.map(h=>`<div class="hl-item"><h5>${h.title}</h5><p>${h.text}</p></div>`).join('');
+ 
+/* ── Navbar + sticky ── */
+const navbar = document.getElementById('navbar');
+const sticky = document.getElementById('stickyBar');
+window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 50);
+    sticky.classList.toggle('show', document.querySelector('.hero-split').getBoundingClientRect().bottom < 0);
+});
+ 
+/* ── Tabs ── */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelector('.tab-btn.active').classList.remove('active');
+        document.querySelector('.tab-panel.active').classList.remove('active');
+        btn.classList.add('active');
+        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    });
+});
+ 
+/* ════════════════════════════════════════════════════════════
+   MODAL — Ouverture, fermeture, soumission & confirmation
+════════════════════════════════════════════════════════════ */
+let currentModalType = 'reservation';
+ 
+function openModal(type) {
+    currentModalType = type;
+ 
+    /* Réinitialiser l'état : cacher succès, montrer formulaire */
+    document.getElementById('successBlock').classList.remove('visible');
+    document.getElementById('modalFormWrap').style.display = 'flex';
+    document.getElementById('modalTitle').style.display    = 'block';
+    document.getElementById('modalSub').style.display      = 'block';
+ 
+    /* Adapter les textes selon le type */
+    const config = {
+        reservation: {
+            titre: 'Réserver ce véhicule',
+            sous:   'Remplissez le formulaire — un conseiller vous répond sous 24h.',
+            bouton: 'Confirmer la réservation →'
+        },
+        essai: {
+            titre: 'Planifier un essai privé',
+            sous:   'Choisissez votre créneau — nous nous déplaçons à votre convenance.',
+            bouton: 'Planifier mon essai →'
+        }
+    };
+    const c = config[type];
+    document.getElementById('modalTitle').textContent     = c.titre;
+    document.getElementById('modalSub').textContent       = c.sous;
+    document.getElementById('modalSubmitBtn').textContent = c.bouton;
+ 
+    /* Vider les champs */
+    document.getElementById('fieldNom').value   = '';
+    document.getElementById('fieldEmail').value = '';
+    document.getElementById('fieldTel').value   = '';
+    document.getElementById('fieldDelai').selectedIndex = 0;
+    document.getElementById('fieldMsg').value   = '';
+ 
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+ 
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+}
+ 
+function closeOutside(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+ 
+/* ── Soumission du formulaire → affichage de la confirmation ── */
+function submitForm() {
+    const nomRaw = document.getElementById('fieldNom').value.trim();
+    const email  = document.getElementById('fieldEmail').value.trim();
+ 
+    /* Validation minimale */
+    if (!nomRaw) {
+        document.getElementById('fieldNom').focus();
+        document.getElementById('fieldNom').style.borderColor = '#e74c3c';
+        setTimeout(() => document.getElementById('fieldNom').style.borderColor = '', 2000);
+        return;
+    }
+    if (!email) {
+        document.getElementById('fieldEmail').focus();
+        document.getElementById('fieldEmail').style.borderColor = '#e74c3c';
+        setTimeout(() => document.getElementById('fieldEmail').style.borderColor = '', 2000);
+        return;
+    }
+ 
+    /* Extraire le prénom (premier mot) */
+    const prenom = nomRaw.split(' ')[0];
+ 
+    /* Messages selon le type */
+    const messages = {
+        reservation: {
+            titre: `Merci ${prenom}, votre réservation est enregistrée !`,
+            corps: `Votre demande de réservation a bien été reçue. Un conseiller AURA MOTORS vous contactera sous 24h pour confirmer les modalités et finaliser votre dossier.`,
+            badge: 'En cours de traitement'
+        },
+        essai: {
+            titre: `Merci ${prenom}, votre demande est transmise !`,
+            corps: `Votre demande d'essai privé a bien été enregistrée. Un membre de notre équipe vous contactera sous 24h pour organiser votre essai à la date et au lieu de votre choix.`,
+            badge: 'Planification en cours'
+        }
+    };
+ 
+    const m = messages[currentModalType];
+ 
+    /* Remplir le bloc de confirmation */
+    document.getElementById('successTitle').textContent = m.titre;
+    document.getElementById('successMsg').textContent   = m.corps;
+    document.getElementById('successCar').textContent   = car.name;
+    document.getElementById('successName').textContent  = nomRaw;
+    document.getElementById('successBadge').textContent = m.badge;
+ 
+    /* Masquer le formulaire, afficher la confirmation */
+    document.getElementById('modalFormWrap').style.display = 'none';
+    document.getElementById('modalTitle').style.display    = 'none';
+    document.getElementById('modalSub').style.display      = 'none';
+    document.getElementById('successBlock').classList.add('visible');
+}
+ 
+/* ── Lightbox ── */
+function openLightbox()  { if (!gallery.length) return; document.getElementById('lightbox').classList.add('open');    document.body.style.overflow = 'hidden'; }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+ 
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeModal(); closeLightbox(); }
+});
+</script>
+</body>
+</html>

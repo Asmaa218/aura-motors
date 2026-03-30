@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection | AURA MOTORS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #050505;
+            --text-color: #ffffff;
+            --accent-color: #D4AF37;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'Montserrat', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: var(--font-main); overflow-x: hidden; line-height: 1.6;
+        }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; transition: 0.4s ease; backdrop-filter: blur(10px);
+        }
+        nav.scrolled {
+            background: rgba(5,5,5,0.9); padding: 15px 50px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .logo { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; }
+        .logo span { color: var(--accent-color); }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a {
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+            opacity: 0.7; position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 1px;
+            bottom: -5px; left: 0; background-color: var(--accent-color); transition: 0.3s;
+        }
+        .nav-links a.active, .nav-links a:hover { opacity: 1; }
+        .nav-links a.active::after, .nav-links a:hover::after { width: 100%; }
+
+        .hero {
+            height: 70vh; width: 100%; position: relative;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('imgcol.jpeg') center center / cover no-repeat;
+        }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(5,5,5,0.8), rgba(0,0,0,0.9)) ;            
+            filter: brightness(0.7); z-index: -1;
+        }
+        .hero-content {
+            text-align: center; z-index: 1;
+            opacity: 0; transform: translateY(30px);
+            animation: fadeUp 1s ease forwards 0.5s;
+        }
+        .hero h1 { font-family: var(--font-serif); font-size: 4rem; font-weight: 400; margin-bottom: 20px; }
+        .hero p { font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent-color); }
+
+        .filters { padding: 80px 50px 40px; max-width: 1400px; margin: 0 auto; }
+        .filter-tabs { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+        .filter-btn {
+            padding: 12px 30px; background: var(--glass-bg); border: 1px solid var(--glass-border);
+            color: white; text-transform: uppercase; letter-spacing: 1px; font-size: 0.75rem;
+            cursor: pointer; backdrop-filter: blur(5px); transition: 0.3s; font-family: var(--font-main);
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent-color); color: black; border-color: var(--accent-color);
+        }
+
+        .collection-grid {
+            padding: 0 50px 100px; max-width: 1400px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;
+        }
+        .car-card {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 8px; overflow: hidden; transition: 0.4s ease;
+            position: relative; opacity: 0; transform: translateY(50px);
+        }
+        .car-card.visible { opacity: 1; transform: translateY(0); }
+        .car-card:hover {
+            transform: translateY(-15px); border-color: var(--accent-color);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .car-badge {
+            position: absolute; top: 20px; right: 20px;
+            background: var(--accent-color); color: black;
+            padding: 8px 16px; font-size: 0.7rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .car-image { width: 100%; height: 280px; object-fit: cover; transition: 0.5s; display: block; }
+        .car-card:hover .car-image { transform: scale(1.05); }
+        .car-info { padding: 30px; }
+        .car-title { font-size: 1.4rem; margin-bottom: 8px; font-family: var(--font-serif); }
+        .car-price { color: var(--accent-color); font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; display: block; }
+        .car-specs { display: flex; justify-content: space-between; font-size: 0.82rem; color: #aaa; margin-bottom: 20px; }
+        .btn-detail {
+            width: 100%; padding: 12px; background: var(--glass-bg);
+            border: 1px solid var(--glass-border); color: white;
+            text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;
+            cursor: pointer; backdrop-filter: blur(5px); transition: 0.3s; font-family: var(--font-main);
+        }
+        .btn-detail:hover { background: var(--accent-color); color: black; border-color: var(--accent-color); }
+         /* FOOTER */
+        footer { border-top: 1px solid var(--glass-border); padding: 50px; text-align: center; }
+        .footer-logo { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; letter-spacing: 2px; margin-bottom: 10px; }
+        .footer-logo span { color: var(--gold); }
+        footer p { font-size: 0.78rem; color: #666; ;}
+ 
+
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .collection-grid { padding: 0 20px 50px; grid-template-columns: 1fr; }
+            .filters { padding: 60px 20px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo">AURA <span>MOTORS</span></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="collection.html" class="active">Collection</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="apropos.html">À Propos</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <p>Pièces d'Exception</p>
+            <h1>Collection</h1>
+        </div>
+    </section>
+
+    <div class="filters">
+        <div class="filter-tabs">
+            <button class="filter-btn active" data-filter="all">Toutes</button>
+            <button class="filter-btn" data-filter="classique">Classiques</button>
+            <button class="filter-btn" data-filter="sport">Sportives</button>
+            <button class="filter-btn" data-filter="moderne">Modernes</button>
+            <button class="filter-btn" data-filter="gt">GT</button>
+        </div>
+    </div>
+
+    <div class="collection-grid" id="carGrid"></div>
+    <footer>
+        <div class="logo">AURA <span>MOTORS</span></div>
+        <p>&copy; 2026 AURA MOTORS. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+    /* ═══════════════════════════════════════════════════════
+       BASE DE DONNÉES — MÊME SOURCE QUE detail.html
+       Toute modification ici doit être reportée dans detail.html
+    ═══════════════════════════════════════════════════════ */
+    const carsData = [
+            { id: 1, name: "Mercedes-Benz E-Class",    price: "35 000 DH/Mois",   year: "2024", power: "381 ch",  marque: "Mercedes-Benz", category: "classique",category: "classique",  img: "imag39.jpeg" },
+        { id: 2, name: "BMW Serie 3 320D",        price: "25 000 DH/Mois",   year: "2020", power: "190 ch",  marque: "BMW",img:"imag38.jpeg"  },
+            { id: 3, name: "Porsche 922 Turbo S",           price: "350 000 DH/Mois",   year: "2021", power: "650 ch",  marque: "Porsche", category: "sport",  img: "imag45.jpeg" },
+            { id: 4, name: "Audi Q8 S Line",   price: "60 000 DH/Mois",   year: "2023", power: "740 ch",  marque: "Audi", category: "moderne",  img: "imag1.jpeg"},
+            { id: 5, name: "Volkswagen Touareg R-Line V6",          price: "38 000 DH/Mois", year: "2023", power: "286 ch", marque: "Volkswagen", category: "modern", img: "imag18.jpeg" },
+            { id: 6, name: "Aston Martin Vanquish Zagato Volante", price: "25 000 DH/Jour",   year: "2018", power: "600 ch",  marque: "Aston Martin", category: "gt",   img: "imag49.jpeg" },
+            { id: 7, name: "Land-Rover Range Rover Velar",     price: "45 000 DH/Mois",   year: "2020", power: "550 ch",  marque: "Range Rover", category: "moderne",    img: "imag23.jpeg" }
+        ];
+
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    function generateCards(cars) {
+        const grid = document.getElementById('carGrid');
+        grid.innerHTML = cars.map(car => `
+            <div class="car-card" data-category="${car.category}">
+                <img src="${car.img}" alt="${car.name}" class="car-image"
+                     onerror="this.src='https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=800&auto=format&fit=crop'">
+                <div class="car-info">
+                    <h3 class="car-title">${car.name}</h3>
+                    <span class="car-price">${car.price}</span>
+                    <div class="car-specs">
+                        <span>${car.year}</span>
+                        <span>${car.power}</span>
+                        <span>${car.marque}</span>
+                    </div>
+                    <button class="btn-detail" onclick="location.href='detail.html?id=${car.id}'">Voir les détails</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelector('.filter-btn.active').classList.remove('active');
+            btn.classList.add('active');
+            const filter = btn.dataset.filter;
+            generateCards(filter === 'all' ? carsData : carsData.filter(c => c.category === filter));
+            animateCards();
+        });
+    });
+
+    function animateCards() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.car-card').forEach(card => observer.observe(card));
+    }
+
+    generateCards(carsData);
+    animateCards();
+    </script>
+</body>
+</html>
