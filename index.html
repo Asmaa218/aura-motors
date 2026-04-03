@@ -25,7 +25,7 @@
              color: inherit;
               transition: 0.3s; }
         ul { list-style: none; }
-
+ 
         /* NAV */
         nav { position: fixed;
              top: 0;
@@ -80,8 +80,11 @@
         .car-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 4px; overflow: hidden; opacity: 0; transform: translateY(50px); transition: 0.4s ease; }
         .car-card.visible { opacity: 1; transform: translateY(0); }
         .car-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .car-image { width: 100%; height: 250px; object-fit: cover; display: block; transition: 0.5s; }
+        .car-image { width: 100%; height: 250px; object-fit: cover; display: block; transition: 0.5s; cursor: pointer; }
         .car-card:hover .car-image { transform: scale(1.05); }
+        .car-image-link { display: block; overflow: hidden; position: relative; }
+        .car-image-link::after { content: 'Voir la collection'; position: absolute; inset: 0; background: rgba(212,175,55,0.18); color: var(--gold); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.35s; font-family: var(--sans); font-weight: 600; backdrop-filter: blur(2px); }
+        .car-image-link:hover::after { opacity: 1; }
         .car-info { padding: 25px; }
         .car-title { font-family: var(--serif); font-size: 1.5rem; margin-bottom: 5px; }
         .car-price { display: block; color: var(--gold); font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; }
@@ -168,7 +171,7 @@
         </div>
         <div class="grid-cars">
             <div class="car-card">
-                <img src="imag23.jpeg"  alt="Corvette" class="car-image">
+                <a href="collection.html" class="car-image-link"><img src="imag23.jpeg"  alt="Corvette" class="car-image"></a>
                 <div class="car-info">
                     <h3 class="car-title">Range Rover Velar</h3>
                     <span class="car-price">45 000 DH/Mois</span>
@@ -176,7 +179,7 @@
                 </div>
             </div>
             <div class="car-card">
-                <img src="imag45.jpeg" alt="Porsche" class="car-image">
+                <a href="collection.html" class="car-image-link"><img src="imag45.jpeg" alt="Porsche" class="car-image"></a>
                 <div class="car-info">
                     <h3 class="car-title">Porsche 922 Turbo S </h3>
                     <span class="car-price">350 000 DH/Mois</span>
@@ -184,7 +187,7 @@
                 </div>
             </div>
             <div class="car-card">
-                <img src="imag39.jpeg" alt="Lamborghini" class="car-image">
+                <a href="collection.html" class="car-image-link"><img src="imag39.jpeg" alt="Lamborghini" class="car-image"></a>
                 <div class="car-info">
                     <h3 class="car-title">Mercedes-Benz E-Class</h3>
                     <span class="car-price">35 000 DH/Mois</span>
@@ -237,7 +240,7 @@
             el.style.transitionDelay = `${i * 100}ms`;
             observer.observe(el);
         });
-
+ 
         // Récupère la page actuelle depuis l'URL
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         document.querySelectorAll('.nav-links a').forEach(link => {
